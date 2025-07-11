@@ -1,19 +1,23 @@
-# stable official Java runtime base image
+
+
+# BASE IMAGE - which provides the working environment
 FROM openjdk:17-jdk-alpine
 
-# metadata
-LABEL maintainer="your-email@example.com"
-LABEL version="1.0"
-LABEL description="A simple Java application"
-
-# working directory
+#WORKING DIRECTORY - on which directory will my container run.... if it is copied from source
 WORKDIR /app
 
-# Copy source code into the container
-COPY src/Main.java /app/Main.java
+# Copy the source code from HOST to working directory
+COPY . .
 
-# Compile the Java code
-RUN javac Main.java
+# Install timezone data using Alpine Package Manager
+RUN apk add --no-cache tzdata
 
-# Run the Java application when the container starts
+# Set timezone equal to IST
+ENV TZ=Asia/Kolkata
+
+# Compile the code
+RUN javac src/Main.java -d /app
+
+# Run the Application
 CMD ["java", "Main"]
+
